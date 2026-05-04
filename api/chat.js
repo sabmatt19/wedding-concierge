@@ -46,9 +46,12 @@ Rules:
 
     const data = await response.json();
 
-    const reply =
-      data.choices?.[0]?.message?.content ||
-      "Sorry, something went wrong.";
+if (!data.choices) {
+  return res.status(200).json({ reply: "OpenRouter error: " + 
+JSON.stringify(data) });
+}
+
+const reply = data.choices[0].message.content;
 
     res.status(200).json({ reply });
 
