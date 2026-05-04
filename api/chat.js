@@ -31,9 +31,7 @@ Rules:
       method: "POST",
       headers: {
         "Authorization": "Bearer " + process.env.OPENROUTER_API_KEY,
-        "Content-Type": "application/json",
-        "HTTP-Referer": "https://vercel.app",
-        "X-Title": "Wedding Concierge"
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
         model: "meta-llama/llama-3.3-70b-instruct",
@@ -47,9 +45,13 @@ Rules:
     });
 
     const data = await response.json();
-    const reply = data.choices?.[0]?.message?.content || "Sorry, something went wrong.";
+
+    const reply =
+      data.choices?.[0]?.message?.content ||
+      "Sorry, something went wrong.";
 
     res.status(200).json({ reply });
+
   } catch (error) {
     res.status(500).json({ reply: "Server error." });
   }
