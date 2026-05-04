@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2299.5">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;title&gt;Wedding Concierge&lt;/title&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>body { font-family: Arial; max-width: 600px; margin: auto; padding: 20px; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>#chat { border: 1px solid #ddd; padding: 10px; height: 400px; overflow-y: auto; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.msg { margin: 8px 0; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.user { font-weight: bold; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>button { padding: 10px; margin-top: 10px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;h2&gt;💍 Wedding Concierge&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div id="chat"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;input id="input" placeholder="Ask a question..." style="width: 100%; padding: 8px;" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;button onclick="send()"&gt;Send&lt;/button&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>async function send() {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const input = document.getElementById("input");</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const chat = document.getElementById("chat");</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const message = input.value;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if (!message) return;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>chat.innerHTML += `&lt;div class="msg user"&gt;You: ${message}&lt;/div&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>input.value = "";</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>const res = await fetch("/api/chat", {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>method: "POST",</p>
+<p class="p1"><span class="Apple-converted-space">        </span>headers: { "Content-Type": "application/json" },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>body: JSON.stringify({ message })</p>
+<p class="p1"><span class="Apple-converted-space">      </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>const data = await res.json();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>chat.innerHTML += `&lt;div class="msg"&gt;Concierge: ${data.reply}&lt;/div&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>chat.scrollTop = chat.scrollHeight;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
