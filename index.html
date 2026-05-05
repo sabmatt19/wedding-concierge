@@ -4,9 +4,7 @@
 <title>Sabrina & Matthew | Wedding Concierge</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<link 
-href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Inter:wght@400;500&display=swap" 
-rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
 body {
@@ -122,7 +120,6 @@ button {
   border-radius: 12px;
   cursor: pointer;
 }
-
 </style>
 </head>
 
@@ -135,8 +132,7 @@ button {
   <div class="subtitle">Wedding Concierge</div>
   <div id="chat"></div>
   <div class="input-row">
-    <input id="input" placeholder="Ask about the wedding..." 
-onkeydown="if(event.key === 'Enter') send()" />
+    <input id="input" placeholder="Ask about the wedding..." onkeydown="if(event.key === 'Enter') send()" />
     <button onclick="send()">Send</button>
   </div>
 </div>
@@ -164,31 +160,35 @@ function showTyping() {
 
 function removeTyping() {
   const t = document.getElementById("typing");
-  if (t) t.remove();
-}
-
-function confetti() {
-  for (let i = 0; i < 40; i++) {
-    const c = document.createElement("div");
-    c.style.position = "fixed";
-    c.style.width = "8px";
-    c.style.height = "8px";
-    c.style.background = "#457b9d";
-    c.style.top = Math.random()*100 + "vh";
-    c.style.left = Math.random()*100 + "vw";
-    c.style.borderRadius = "50%";
-    c.style.opacity = 0.7;
-    document.body.appendChild(c);
-    setTimeout(() => c.remove(), 2000);
+  if (t) {
+    t.remove();
   }
 }
 
-addMessage("Welcome to Sabrina & Matthew’s Wedding Concierge 💙 Ask me 
-anything about the weekend!", "bot");
+function confetti() {
+  for (let i = 0; i < 30; i++) {
+    const c = document.createElement("div");
+    c.style.position = "fixed";
+    c.style.width = "6px";
+    c.style.height = "6px";
+    c.style.background = "#457b9d";
+    c.style.top = Math.random() * 100 + "vh";
+    c.style.left = Math.random() * 100 + "vw";
+    c.style.borderRadius = "50%";
+    c.style.opacity = "0.7";
+    document.body.appendChild(c);
+    setTimeout(function() {
+      c.remove();
+    }, 1500);
+  }
+}
+
+addMessage("Welcome to Sabrina & Matthew's Wedding Concierge 💙 Ask me anything about the weekend!", "bot");
 
 async function send() {
   const input = document.getElementById("input");
   const message = input.value.trim();
+
   if (!message) return;
 
   addMessage(message, "user");
@@ -196,19 +196,25 @@ async function send() {
 
   showTyping();
 
-  const res = await fetch("/api/chat", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message })
-  });
+  try {
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: message })
+    });
 
-  const data = await res.json();
+    const data = await res.json();
 
-  removeTyping();
-  addMessage(data.reply, "bot");
+    removeTyping();
+    addMessage(data.reply, "bot");
 
-  if (message.toLowerCase().includes("dance")) {
-    confetti();
+    if (message.toLowerCase().includes("dance")) {
+      confetti();
+    }
+
+  } catch (error) {
+    removeTyping();
+    addMessage("Something went wrong. Please try again.", "bot");
   }
 }
 
@@ -216,3 +222,4 @@ async function send() {
 
 </body>
 </html>
+cat index.html
