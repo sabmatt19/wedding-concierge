@@ -2,11 +2,7 @@ export default async function handler(req, res) {
   try {
     const { message } = req.body;
 
-    const systemPrompt = `
-You are Sabrina & Matthew's Wedding Concierge.
-Answer clearly and naturally using only the wedding event details.
-Vary response length appropriately.
-`;
+    const systemPrompt = "You are a helpful wedding concierge.";
 
     const response = await 
 fetch("https://openrouter.ai/api/v1/chat/completions", {
@@ -23,29 +19,18 @@ fetch("https://openrouter.ai/api/v1/chat/completions", {
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: message }
-        ],
-        temperature: 0.5
+        ]
       })
     });
 
     const data = await response.json();
 
-    if (!response.ok) {
-      console.error("OpenRouter error:", data);
-      return res.status(500).json({ error: "OpenRouter failed" });
-    }
+    console.log("FULL OPENROUTER RESPONSE:", JSON.stringify(data));
 
-    const reply = data?.choices?.[0]?.message?.content;
-
-    if (!reply) {
-      console.error("No reply content:", data);
-      return res.status(500).json({ error: "No content returned" });
-    }
-
-    return res.status(200).json({ reply });
+    return res.status(200).json({ reply: JSON.stringify(data) });
 
   } catch (error) {
-    console.error("Server crash:", error);
-    return res.status(500).json({ error: "Server error" });
+    console.error("SERVER ERROR:", error);
+    return res.status(500).json({ error: error.message });
   }
 }
