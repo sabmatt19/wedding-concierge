@@ -192,10 +192,12 @@ Big Wave Bay.
     const response = await 
 fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
-      headers: {
-        "Authorization": \`Bearer \${process.env.OPENROUTER_API_KEY}\`,
-        "Content-Type": "application/json"
-      },
+headers: {
+  "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
+  "Content-Type": "application/json",
+  "HTTP-Referer": "https://sabrinamatthew-wedding-concierge.vercel.app",
+  "X-Title": "Wedding Concierge"
+},
       body: JSON.stringify({
         model: "meta-llama/llama-3-8b-instruct",
         messages: [
