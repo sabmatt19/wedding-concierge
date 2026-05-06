@@ -212,10 +212,16 @@ if (!response.ok) {
   });
 }
 
-    return res.status(200).json({
-      reply: data?.choices?.[0]?.message?.content || "I'm sorry, something 
-went wrong."
-    });
+const reply =
+  data &&
+  data.choices &&
+  data.choices[0] &&
+  data.choices[0].message &&
+  data.choices[0].message.content
+    ? data.choices[0].message.content
+    : "Sorry, something went wrong.";
+
+return res.status(200).json({ reply });
 
 } catch (error) {
   console.error("SERVER CRASH:", error);
