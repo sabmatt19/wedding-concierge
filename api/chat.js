@@ -203,18 +203,25 @@ fetch("https://openrouter.ai/api/v1/chat/completions", {
 
     const data = await response.json();
 
-    if (!response.ok) {
-      console.error("OpenRouter error:", data);
-      return res.status(500).json({ error: "Model request failed" });
-    }
+if (!response.ok) {
+  console.error("STATUS:", response.status);
+  console.error("FULL ERROR:", JSON.stringify(data, null, 2));
+  return res.status(500).json({
+    error: "OpenRouter error",
+    details: data
+  });
+}
 
     return res.status(200).json({
       reply: data?.choices?.[0]?.message?.content || "I'm sorry, something 
 went wrong."
     });
 
-  } catch (error) {
-    console.error("Server crash:", error);
-    return res.status(500).json({ error: "Server error" });
-  }
+} catch (error) {
+  console.error("SERVER CRASH:", error);
+  return res.status(500).json({
+    error: "Server crash",
+    details: error.message
+  });
+}
 };
