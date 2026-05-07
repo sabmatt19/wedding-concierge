@@ -138,7 +138,7 @@ button {
 </div>
 
 <script>
-
+let conversation = [];
 const chat = document.getElementById("chat");
 
 function addMessage(text, className) {
@@ -197,20 +197,34 @@ async function send() {
   showTyping();
 
   try {
-    const res = await fetch("/api/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: message })
-    });
+// Store conversation history
+conversation.push({
+  role: "user",
+  content: message
+});
 
-    const data = await res.json();
+const res = await fetch("/api/chat", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    messages: conversation
+  })
+});
 
-    removeTyping();
-    addMessage(data.reply, "bot");
+const data = await res.json();
 
-    if (message.toLowerCase().includes("dance")) {
-      confetti();
-    }
+removeTyping();
+addMessage(data.reply, "bot");
+
+// Add bot reply to memory
+conversation.push({
+  role: "assistant",
+  content: data.reply
+});
+
+if (message.toLowerCase().includes("dance")) {
+  confetti();
+}
 
   } catch (error) {
     removeTyping();
