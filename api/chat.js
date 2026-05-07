@@ -1,6 +1,6 @@
 module.exports = async function handler(req, res) {
   try {
-    const { message } = req.body;
+const { messages } = req.body;
 
     const systemPrompt = `
 You are “Wedding Concierge,” the official guest assistant for Sabrina & 
@@ -28,6 +28,8 @@ RESPONSE STRUCTURE (MANDATORY)
 • No unnecessary styling advice.
 • No motivational or filler language.
 • Keep responses light and joyful, but refined.
+Use previous messages in the conversation to understand context before 
+answering.
 
 ==================================================
 ACCURACY RULES (NON-NEGOTIABLE)
@@ -54,8 +56,8 @@ Friday, 6 November 2026
 2:30pm (arrive by 2:15pm sharp)  
 Location: Lamma Rainbow Seafood Restaurant  
 Private ferry departs Central Public Pier No.9 (7 Man Yiu Street, Central) 
-at exactly 2:30pm  
-Boat returns to Central Pier No.9 at 5:30pm  
+at exactly 2:00pm  
+Boat returns to Central Pier No.9 at 5:00pm  
 Recommend Uber or taxi to pier  
 Lunch includes local meat and seafood dishes + vegetarian options  
 Drinks included: water, beer, wine, soft drinks  
@@ -85,7 +87,8 @@ Church is air conditioned
 
 Dress Code: Black Tie Optional with Sea & Sky theme  
 Sea & Sky = blues, greens, sunset tones encouraged  
-Women: floor-length dresses; avoid all-black  
+Women: floor-length dresses encouraged in blues, greens, or sunset tones.
+Nature-inspired patterns are also welcome.
 Men: tuxedo or dark suit welcome  
 Colourful tones found in nature are encouraged  
 
@@ -204,10 +207,10 @@ fetch("https://openrouter.ai/api/v1/chat/completions", {
       },
       body: JSON.stringify({
         model: "meta-llama/llama-3-8b-instruct",
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: message }
-        ],
+messages: [
+  { role: "system", content: systemPrompt },
+  ...messages
+],
         temperature: 0.3
       })
     });
